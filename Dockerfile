@@ -18,6 +18,8 @@ RUN apt-get update && \
       locales \
       curl \
       dumb-init \
+      nodejs 
+      npm \
       wget && \
     locale-gen en_US.UTF-8 && \
     apt clean && \
@@ -35,6 +37,13 @@ RUN apt-get update && \
     chgrp -R 0 /home/coder && \
     chmod -R g=u /home/coder && \
     chmod g=u /etc/passwd;
+
+RUN sudo apt-get update && sudo apt-get install -y apt-transport-https && \
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list && \
+sudo apt-get update && \
+sudo apt-get install -y kubectl
+
 
 WORKDIR /home/coder
 
