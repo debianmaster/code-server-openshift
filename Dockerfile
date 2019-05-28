@@ -28,15 +28,7 @@ RUN apt-get update && \
     wget -O - https://github.com/codercom/code-server/releases/download/${CODER_VERSION}/code-server${CODER_VERSION}-linux-x64.tar.gz | tar -xzv && \
     chmod -R 755 code-server${CODER_VERSION}-linux-x64/code-server && \
     mv code-server${CODER_VERSION}-linux-x64/code-server /usr/bin/ && \
-    rm -rf code-server-${CODER_VERSION}-linux-x64 && \
-    adduser --disabled-password --gecos '' coder   && \
-    echo '%sudo ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/nopasswd && \
-    chmod g+rw /home/coder && \
-    chmod a+x /opt/exec && \
-    chgrp -R 0 /home/coder && \
-    chmod -R g=u /home/coder && \
-    chmod g=u /etc/passwd;
+    rm -rf code-server-${CODER_VERSION}-linux-x64 && mkdir -p /home/coder
 
 RUN sudo apt-get update && sudo apt-get install -y apt-transport-https && \
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
@@ -46,8 +38,6 @@ sudo apt-get install -y kubectl
 
 
 WORKDIR /home/coder
-
-USER coder
 
 RUN mkdir -p projects && mkdir -p certs && \
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash && \
@@ -59,7 +49,6 @@ COPY entrypoint /home/coder
 
 VOLUME ["/home/coder/projects", "/home/coder/certs"];
 
-USER 10001
 
 ENTRYPOINT ["/home/coder/entrypoint"]
 
