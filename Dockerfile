@@ -18,7 +18,7 @@ RUN apt-get update && \
       locales \
       curl \
       dumb-init \
-      nodejs 
+      nodejs \
       npm \
       wget && \
     locale-gen en_US.UTF-8 && \
